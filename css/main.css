@@ -92,6 +92,10 @@ body {
   display: block;
 }
 
+.reps-box {
+  width: 150px;
+}
+
 ::-moz-range-track {
   background: #d7dcdf;
   border: 0;

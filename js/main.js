@@ -12,6 +12,7 @@ let speedOut = $('#speed-out').val();
 let speedIn = $('#speed-in').val();
 let jerkOut = $('#jerk-out').val();
 let jerkIn = $('#jerk-in').val();
+let repsCount = 0;
 let nextJob;
 let fabmo = new FabMoDashboard();
 
@@ -32,7 +33,6 @@ const setJobs = () => {
     jobOut = 'M100.1 ({xjm:'+jerkOut+'})\n'+
     'G90\n' +
     'G1X'+distance+'f'+speedOut;
-    
     jobIn = 'M100.1 ({xjm:'+jerkIn+'})\n'+
     'G90\n' +
     'G1X0f' + speedIn;
@@ -44,6 +44,12 @@ const setNextJob = () => {
         jobOutRunning = false;
         jobInRunning = true;
         pause = pauseIn;
+
+        repsCount = repsCount + 1;
+        console.log("count= ",repsCount);
+        $("#reps").val(repsCount)
+    
+        
     } else if(jobInRunning){
         nextJob = jobOut;
         jobOutRunning = true;

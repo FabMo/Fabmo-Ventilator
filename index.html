@@ -25,42 +25,54 @@
                 <div class="col-sm-8">
                     <div class="form-group range-slider">
                         <label class="range-slider-label" for="distance">Distance</label>
-                        <input id="distance" class="range-slider__range" type="range" step="0.1" value="5" min="0" max="10">
+                        <input id="distance" class="range-slider__range" type="range" step="0.1" value="4" min="0" max="5">
                         <span class="range-slider__value">0</span>
                     </div>
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
                     <div class="form-group range-slider">
-                        <label class="range-slider-label" for="speed-out">Speed Out</label>
-                        <input id="speed-out" class="range-slider__range" type="range" step="0.1" value="5" min="1" max="14">
+                        <label class="range-slider-label" for="speed-out">Speed Compress</label>
+                        <input id="speed-out" class="range-slider__range" type="range" step="0.1" value="5" min="1" max="9">
                         <span class="range-slider__value">0</span>
                     </div>
                     <div class="form-group range-slider ">
-                        <label class="range-slider-label" for="speed-in">Speed In</label>
-                        <input id="speed-in" class="range-slider__range" type="range" step="0.1" value="5" min="1" max="14">
-                        <span class="range-slider__value">0</span>
-                    </div>
-                    <div class="form-group range-slider ">
-                        <label class="range-slider-label" for="jerk-out">Jerk Out</label>
+                        <label class="range-slider-label" for="jerk-out">Jerk Compress</label>
                         <input id="jerk-out" class="range-slider__range" type="range" step="1" value="50" min="5" max="150">
                         <span class="range-slider__value">0</span>
                     </div>
+                    <div class="form-group">
+                        <label for="speed">Pause Before Compress (Optional)</label>
+                        <input class="form-control" id="pause-out" value="0">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" id="run" class="btn btn-success">Run</button>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
                     <div class="form-group range-slider ">
-                        <label class="range-slider-label" for="jerk-in">Jerk In</label>
+                        <label class="range-slider-label" for="speed-in">Speed Retract</label>
+                        <input id="speed-in" class="range-slider__range" type="range" step="0.1" value="4" min="1" max="9">
+                        <span class="range-slider__value">0</span>
+                    </div>
+                    <div class="form-group range-slider ">
+                        <label class="range-slider-label" for="jerk-in">Jerk Retract</label>
                         <input id="jerk-in" class="range-slider__range" type="range" step="1" value="50" min="5" max="150">
                         <span class="range-slider__value">0</span>
                     </div>
                     <div class="form-group">
-                        <label for="speed">Pause Out (Optional)</label>
-                        <input class="form-control" id="pause-out" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="speed">Pause In (Optional)</label>
+                        <label for="speed">Pause Before Retract (Optional)</label>
                         <input class="form-control" id="pause-in" value="0">
                     </div>
-                    <div class="form-group">
-                        <button type="button"  id="run" class="btn btn-success">Run</button>
-                    </div>
+                    <div>
+                        <label>Total Repetitions:</label>
+                        <input class="form-control reps-box" id="reps" value="0">
+                    </div>                            
                 </div>
-                <div class="col-sm-2"></div>
             </div>
         </div>
     </body>
