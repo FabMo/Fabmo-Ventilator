@@ -7,11 +7,11 @@ let readyToRun = true;
 let pauseOut = 0; 
 let pauseIn = 0;
 let pause = 0;
-let distance = $('#distance').val();
-let speedOut = $('#speed-out').val();
-let speedIn = $('#speed-in').val();
-let jerkOut = $('#jerk-out').val();
-let jerkIn = $('#jerk-in').val();
+// let distance = $('#distance').val();
+// let speedOut = $('#speed-out').val();
+// let speedIn = $('#speed-in').val();
+// let jerkOut = $('#jerk-out').val();
+// let jerkIn = $('#jerk-in').val();
 let repsCount = 0;
 let nextJob;
 let fabmo = new FabMoDashboard();
@@ -22,40 +22,40 @@ const init = () => {
 }
 
 const setJobs = () => {
-    distance = $('#distance').val();
-    speedOut = $('#speed-out').val()*60;
-    speedIn = $('#speed-in').val()*60;
-    jerkOut = $('#jerk-out').val();
-    jerkIn = $('#jerk-in').val();
-    pauseOut = parseInt($('#pause-out').val())*1000;
-    pauseIn = parseInt($('#pause-in').val())*1000;
-    pause;
-    jobOut = 'M100.1 ({xjm:'+jerkOut+'})\n'+
-    'G90\n' +
-    'G1X'+distance+'f'+speedOut;
-    jobIn = 'M100.1 ({xjm:'+jerkIn+'})\n'+
-    'G90\n' +
-    'G1X0f' + speedIn;
+    // distance = $('#distance').val();
+    // speedOut = $('#speed-out').val()*60;
+    // speedIn = $('#speed-in').val()*60;
+    // jerkOut = $('#jerk-out').val();
+    // jerkIn = $('#jerk-in').val();
+    // pauseOut = parseInt($('#pause-out').val())*1000;
+    // pauseIn = parseInt($('#pause-in').val())*1000;
+    // pause;
+    // jobOut = 'M100.1 ({xjm:'+jerkOut+'})\n'+
+    // 'G90\n' +
+    // 'G1X'+distance+'f'+speedOut;
+    // jobIn = 'M100.1 ({xjm:'+jerkIn+'})\n'+
+    // 'G90\n' +
+    // 'G1X0f' + speedIn;
 }
 
 const setNextJob = () => {
-    if(jobOutRunning){
-        nextJob = jobIn;
-        jobOutRunning = false;
-        jobInRunning = true;
-        pause = pauseIn;
+    // if(jobOutRunning){
+    //     nextJob = jobIn;
+    //     jobOutRunning = false;
+    //     jobInRunning = true;
+    //     pause = pauseIn;
 
-        repsCount = repsCount + 1;
-        console.log("count= ",repsCount);
-        $("#reps").val(repsCount);
+    //     repsCount = repsCount + 1;
+    //     console.log("count= ",repsCount);
+    //     $("#reps").val(repsCount);
     
         
-    } else if(jobInRunning){
-        nextJob = jobOut;
-        jobOutRunning = true;
-        jobInRunning = false;
-        pause = pauseOut;
-    } 
+    // } else if(jobInRunning){
+    //     nextJob = jobOut;
+    //     jobOutRunning = true;
+    //     jobInRunning = false;
+    //     pause = pauseOut;
+    // } 
 }
 
 
@@ -74,9 +74,6 @@ const rangeSlider = () =>{
   
       input.on('input', function(){
         $(this).next(value).html(this.value);
-//        setJobs();
-console.log("mytest - ", this.value, this);
-setConfig("opensbp-variables-vRepCount", 500)
       });
     });
 };
@@ -84,16 +81,25 @@ setConfig("opensbp-variables-vRepCount", 500)
 // ==============================================
 
 
-function updateRepsFromConfig() {
+function updateFromConfig() {
+    let totaldist = 0;
     fabmo.getConfig(function(err, data) {
       $('#reps').val(data.opensbp.variables.vRepCount);
+      //totaldist = (data.opensbp.variables.vCompDist) + (data.opensbp.variables.vCompDist);
+      //$('#distance').val(totaldist);
+      $('#distance-tail').val(data.opensbp.variables.vCompTailDist);
+      $('#speed-out').val(data.opensbp.variables.vCompSpeed);
+      $('#speed-tail').val(data.opensbp.variables.vCompTailSpeed);
+      $('#speed-in').val(data.opensbp.variables.vRetractSpeed);
+      $('#jerk-out').val(data.opensbp.variables.vCompRamp);
+      $('#jerk-in').val(data.opensbp.variables.vRetractRamp);
     });
-  }
+}  
 
 
 $('.opensbp_input').change(function() {  // Handle and Bind generic UI textboxes
     setConfig(this.id, this.value); 
-  });
+});
   
 /**
  * id is of the form opensbp-configitem_name such as opensbp-movexy_speed, etc.
@@ -116,23 +122,21 @@ function setConfig(id, value) {
 	co[parts[parts.length-1]] = value;
 	  console.log(o);
     fabmo.setConfig(o, function(err, data) {
-console.log(err,data)
-        //updateUIFromEngineConfig();
 	});
 }
 
 // ===============================================
 
 const run = () => {
-    if(!running){
-        $('#run').removeClass('btn-success').addClass('btn-danger').html('Stop')
-        fabmo.runGCode(nextJob, function(){
-            running = true;
-        });
-    } else {
-        $('#run').removeClass('btn-danger').addClass('btn-success').html('Run')
-        running = false;
-    }
+    // if(!running){
+    //     $('#run').removeClass('btn-success').addClass('btn-danger').html('Stop')
+    //     fabmo.runGCode(nextJob, function(){
+    //         running = true;
+    //     });
+    // } else {
+    //     $('#run').removeClass('btn-danger').addClass('btn-success').html('Run')
+    //     running = false;
+    // }
 
 }
 
@@ -143,15 +147,18 @@ fabmo.on('status', function(status) {
     let progress = "";
     if (posx <= .5) {
         progress = "20%";
-console.log(posx);    
-console.log(status);
     } else {
         progress = "75%";
     }
 //    let progress = ((posx/6)*100).toString() + "%";    //'distance'
-console.log(progress);
     $('.progress-bar').css('width', progress);
-    updateRepsFromConfig();
+
+    updateFromConfig();
+
+
+
+
+
     //     if(running) {
 //         if (status.state ==="idle" && readyToRun) {
 //             readyToRun = false;
@@ -165,9 +172,10 @@ console.log(progress);
 //         }
 //     }
 });
+
 fabmo.requestStatus();
 
 rangeSlider();
 init();
 
-$('#run').click(()=>run());
+//$('#run').click(()=>run());
