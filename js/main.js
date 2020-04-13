@@ -93,6 +93,7 @@ function updateFromConfig() {
       $('#speed-in').val(data.opensbp.variables.vRetractSpeed);
       $('#jerk-out').val(data.opensbp.variables.vCompRamp);
       $('#jerk-in').val(data.opensbp.variables.vRetractRamp);
+      $('input').val(value).trigger('input');
     });
 }  
 
