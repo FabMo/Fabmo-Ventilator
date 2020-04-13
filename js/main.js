@@ -17,8 +17,8 @@ let nextJob;
 let fabmo = new FabMoDashboard();
 
 const init = () => {
-    setJobs();
-    setNextJob();
+    // setJobs();
+    // setNextJob();
 }
 
 const setJobs = () => {
@@ -47,7 +47,7 @@ const setNextJob = () => {
 
         repsCount = repsCount + 1;
         console.log("count= ",repsCount);
-        $("#reps").val(repsCount)
+        $("#reps").val(repsCount);
     
         
     } else if(jobInRunning){
@@ -74,12 +74,54 @@ const rangeSlider = () =>{
   
       input.on('input', function(){
         $(this).next(value).html(this.value);
-        setJobs();
+//        setJobs();
+console.log("mytest - ", this.value, this);
+setConfig("opensbp-variables-vRepCount", 500)
       });
     });
 };
 
+// ==============================================
 
+
+function updateRepsFromConfig() {
+    fabmo.getConfig(function(err, data) {
+      $('#reps').val(data.opensbp.variables.vRepCount);
+    });
+  }
+
+
+$('.opensbp_input').change(function() {  // Handle and Bind generic UI textboxes
+    setConfig(this.id, this.value); 
+  });
+  
+/**
+ * id is of the form opensbp-configitem_name such as opensbp-movexy_speed, etc.
+ * This will only work for configuration items on the first branch of the tree - 
+ * deeper items need more consideration. (???)
+ **/
+function setConfig(id, value) {
+	var parts = id.split("-");
+	var o = {};
+	var co = o;
+	var i=0;
+
+	do {
+	  co[parts[i]] = {};
+	  if(i < parts.length-1) {
+	    co = co[parts[i]];            
+	  }
+	} while(i++ < parts.length-1 );
+
+	co[parts[parts.length-1]] = value;
+	  console.log(o);
+    fabmo.setConfig(o, function(err, data) {
+console.log(err,data)
+        //updateUIFromEngineConfig();
+	});
+}
+
+// ===============================================
 
 const run = () => {
     if(!running){
@@ -98,28 +140,34 @@ const run = () => {
 
 fabmo.on('status', function(status) {
     let posx = status.posx;
-    let progress = ((posx/distance)*100).toString() + "%";
-    $('.progress-bar').css('width', progress);
-    if(running) {
-        if (status.state ==="idle" && readyToRun) {
-            readyToRun = false;
-            setTimeout(function(){
-                fabmo.runGCode(nextJob, function(){
-                    setNextJob();
-                });
-            }, pause);
-        } else if (status.state ==="running") {
-            readyToRun = true;
-        }
+    let progress = "";
+    if (posx <= .5) {
+        progress = "20%";
+console.log(posx);    
+console.log(status);
+    } else {
+        progress = "75%";
     }
+//    let progress = ((posx/6)*100).toString() + "%";    //'distance'
+console.log(progress);
+    $('.progress-bar').css('width', progress);
+    updateRepsFromConfig();
+    //     if(running) {
+//         if (status.state ==="idle" && readyToRun) {
+//             readyToRun = false;
+//             setTimeout(function(){
+//                 fabmo.runGCode(nextJob, function(){
+//                     setNextJob();
+//                 });
+//             }, pause);
+//         } else if (status.state ==="running") {
+//             readyToRun = true;
+//         }
+//     }
 });
 fabmo.requestStatus();
 
-
-
-  
 rangeSlider();
 init();
 
 $('#run').click(()=>run());
-

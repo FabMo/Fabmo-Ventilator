@@ -52,7 +52,7 @@ body {
   border-radius: 50%;
   background: #007BFE;
   cursor: pointer;
-  transition: background 0.15s ease-in-out;
+  /*transition: background 0.15s ease-in-out; */
 }
 .range-slider__range::-moz-range-thumb:hover {
   background: #007BFE;
