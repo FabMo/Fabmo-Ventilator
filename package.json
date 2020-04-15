@@ -3,7 +3,7 @@
   "main": "./index.html",
   "icon": "icon.jpeg",
   "icon_color": "#ffffff",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Brendan Collins + th",
   "website": "http://www.shopbottools.com",
   "description": "Example how you could run a one-axis ventilator with fabmo",
