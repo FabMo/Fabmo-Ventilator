@@ -21,44 +21,6 @@ const init = () => {
     // setNextJob();
 }
 
-const setJobs = () => {
-    // distance = $('#distance').val();
-    // speedOut = $('#speed-out').val()*60;
-    // speedIn = $('#speed-in').val()*60;
-    // jerkOut = $('#jerk-out').val();
-    // jerkIn = $('#jerk-in').val();
-    // pauseOut = parseInt($('#pause-out').val())*1000;
-    // pauseIn = parseInt($('#pause-in').val())*1000;
-    // pause;
-    // jobOut = 'M100.1 ({xjm:'+jerkOut+'})\n'+
-    // 'G90\n' +
-    // 'G1X'+distance+'f'+speedOut;
-    // jobIn = 'M100.1 ({xjm:'+jerkIn+'})\n'+
-    // 'G90\n' +
-    // 'G1X0f' + speedIn;
-}
-
-const setNextJob = () => {
-    // if(jobOutRunning){
-    //     nextJob = jobIn;
-    //     jobOutRunning = false;
-    //     jobInRunning = true;
-    //     pause = pauseIn;
-
-    //     repsCount = repsCount + 1;
-    //     console.log("count= ",repsCount);
-    //     $("#reps").val(repsCount);
-    
-        
-    // } else if(jobInRunning){
-    //     nextJob = jobOut;
-    //     jobOutRunning = true;
-    //     jobInRunning = false;
-    //     pause = pauseOut;
-    // } 
-}
-
-
 const rangeSlider = () =>{
     var slider = $('.range-slider'),
         range = $('.range-slider__range'),
@@ -78,30 +40,23 @@ const rangeSlider = () =>{
     });
 };
 
-// ==============================================
-
+// ============================================== ted fussing on getting variables ...
 
 function updateFromConfig() {
     let totaldist = 0;
     fabmo.getConfig(function(err, data) {
-      $('#reps').val(data.opensbp.variables.vRepCount);
-      //totaldist = (data.opensbp.variables.vCompDist) + (data.opensbp.variables.vCompDist);
-      //$('#distance').val(totaldist);
-      $('#distance-tail').val(data.opensbp.variables.vCompTailDist);
-      $('#speed-out').val(data.opensbp.variables.vCompSpeed);
-      $('#speed-tail').val(data.opensbp.variables.vCompTailSpeed);
-      $('#speed-in').val(data.opensbp.variables.vRetractSpeed);
-      $('#jerk-out').val(data.opensbp.variables.vCompRamp);
-      $('#jerk-in').val(data.opensbp.variables.vRetractRamp);
-      $('input').val(value).trigger('input');
+      $('#reps').val(data.opensbp.variables.vRepCount).trigger('input');
+      $('#distance').val(data.opensbp.variables.vCompDist).trigger('input');
+      $('#distance-tail').val(data.opensbp.variables.vCompTailDist).trigger('input');
+      // //totaldist = (data.opensbp.variables.vCompDist) + (data.opensbp.variables.vCompDist);
+      $('#speed-out').val(data.opensbp.variables.vCompSpeed).trigger('input');
+      $('#speed-tail').val(data.opensbp.variables.vCompTailSpeed).trigger('input');
+      $('#speed-in').val(data.opensbp.variables.vRetractSpeed).trigger('input');
+      $('#jerk-out').val(data.opensbp.variables.vCompRamp).trigger('input');
+      $('#jerk-in').val(data.opensbp.variables.vRetractRamp).trigger('input');
     });
 }  
 
-
-$('.opensbp_input').change(function() {  // Handle and Bind generic UI textboxes
-    setConfig(this.id, this.value); 
-});
-  
 /**
  * id is of the form opensbp-configitem_name such as opensbp-movexy_speed, etc.
  * This will only work for configuration items on the first branch of the tree - 
@@ -128,50 +83,32 @@ function setConfig(id, value) {
 
 // ===============================================
 
-const run = () => {
-    // if(!running){
-    //     $('#run').removeClass('btn-success').addClass('btn-danger').html('Stop')
-    //     fabmo.runGCode(nextJob, function(){
-    //         running = true;
-    //     });
-    // } else {
-    //     $('#run').removeClass('btn-danger').addClass('btn-success').html('Run')
-    //     running = false;
-    // }
-
-}
-
-
 
 fabmo.on('status', function(status) {
     let posx = status.posx;
+    let inp5 = status.in5;
+    let inp6 = status.in6;
     let progress = "";
-    if (posx <= .5) {
-        progress = "20%";
-    } else {
-        progress = "75%";
-    }
-//    let progress = ((posx/6)*100).toString() + "%";    //'distance'
-    $('.progress-bar').css('width', progress);
-
+  // Compression Bar Display
+        if (posx <= .5) {
+            progress = "0%";
+        } else {
+            progress = "85%";
+        }
+        //    let progress = ((posx/6)*100).toString() + "%";    //'distance'
+        $('.progress-bar').css('width', progress);
+  // Zero and Mid Extension Prox Switch Display
+        if (inp5 === 1) {
+            $('#home-sig').show();
+        } else {
+            $('#home-sig').hide();
+        }
+        if (inp6 === 1) {
+            $('#mid-sig').show();
+        } else {
+            $('#mid-sig').hide();
+        }
     updateFromConfig();
-
-
-
-
-
-    //     if(running) {
-//         if (status.state ==="idle" && readyToRun) {
-//             readyToRun = false;
-//             setTimeout(function(){
-//                 fabmo.runGCode(nextJob, function(){
-//                     setNextJob();
-//                 });
-//             }, pause);
-//         } else if (status.state ==="running") {
-//             readyToRun = true;
-//         }
-//     }
 });
 
 fabmo.requestStatus();
@@ -179,4 +116,3 @@ fabmo.requestStatus();
 rangeSlider();
 init();
 
-//$('#run').click(()=>run());

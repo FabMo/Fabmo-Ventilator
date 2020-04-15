@@ -96,6 +96,10 @@ body {
   width: 150px;
 }
 
+.style1{
+	border-top: 1px solid #8c8b8b;
+}
+ 
 ::-moz-range-track {
   background: #d7dcdf;
   border: 0;
@@ -105,5 +109,8 @@ input::-moz-focus-inner,
 input::-moz-focus-outer {
   border: 0;
 }
+
+
+
 
 /*# sourceMappingURL=main.css.map */
