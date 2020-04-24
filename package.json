@@ -3,7 +3,7 @@
   "main": "./index.html",
   "icon": "icon.jpeg",
   "icon_color": "#ffffff",
-  "version": "injector 0.0.5",
+  "version": "-inject 0.0.5",
   "author": "Brendan Collins + th",
   "website": "http://www.shopbottools.com",
   "description": "Example how you could run a one-axis ventilator with fabmo",

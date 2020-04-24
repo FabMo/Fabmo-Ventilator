@@ -21,6 +21,21 @@ const init = () => {
     // setNextJob();
 }
 
+const run = () => {
+  if(!running){
+          $('#run').removeClass('btn-success').addClass('btn-danger').html('Stop')
+//          fabmo.runGCode('G01 X10 F60', function(){
+          fabmo.runGCode('G01 X10 F60');
+          running = true;
+//      });
+  } else {
+          $('#run').removeClass('btn-danger').addClass('btn-success').html('Run')
+          fabmo.runGCode('{!}');
+          running = false;
+  }
+
+}
+
 const rangeSlider = () =>{
     var slider = $('.range-slider'),
         range = $('.range-slider__range'),
@@ -113,6 +128,17 @@ fabmo.on('status', function(status) {
 
 fabmo.requestStatus();
 
+fabmo.manualEnter({hideKeypad:true, mode:'raw'});
+beep(20, 1800, 1);
+
+$('#run').click(()=>run());
+
 rangeSlider();
 init();
+
+window.addEventListener("unload", function(event){
+  fabmo.manualExit();
+  console.log("unloaded!");        
+}, false);
+
 
