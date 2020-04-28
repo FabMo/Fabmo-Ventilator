@@ -21,20 +21,31 @@ const init = () => {
     // setNextJob();
 }
 
+const kill = () => {
+          fabmo.manualRunGCode('\x04\n');
+//          fabmo.manualRunGCode('%');
+}
+
 const run = () => {
   if(!running){
-          $('#run').removeClass('btn-success').addClass('btn-danger').html('Stop')
+          $('#run').removeClass('btn-success').addClass('btn-danger').html('Run2')
 //          fabmo.runGCode('G01 X10 F60', function(){
-          fabmo.runGCode('G01 X10 F60');
+          fabmo.manualRunGCode('G01 X1 F60');
           running = true;
 //      });
   } else {
-          $('#run').removeClass('btn-danger').addClass('btn-success').html('Run')
-          fabmo.runGCode('{!}');
+          $('#run').removeClass('btn-danger').addClass('btn-success').html('Run1')
+          fabmo.manualRunGCode('G01 X2 F60');
+          fabmo.manualRunGCode('G01 X0 F60')
+          
+          //fabmo.manualRunGCode('!');
+          //fabmo.manualRunGCode('\x04\n');
+          //fabmo.manualRunGCode('M30')
           running = false;
   }
 
 }
+
 
 const rangeSlider = () =>{
     var slider = $('.range-slider'),
@@ -126,19 +137,31 @@ fabmo.on('status', function(status) {
     updateFromConfig();
 });
 
-fabmo.requestStatus();
+//fabmo.requestStatus();
 
-fabmo.manualEnter({hideKeypad:true, mode:'raw'});
-beep(20, 1800, 1);
+//fabmo.manualEnter({hideKeypad:true, mode:'raw'});
+//beep(20, 1800, 1);
 
 $('#run').click(()=>run());
+$('#kill').click(()=>kill());
 
 rangeSlider();
 init();
 
-window.addEventListener("unload", function(event){
-  fabmo.manualExit();
-  console.log("unloaded!");        
-}, false);
+// window.addEventListener("unload", function(event){
+//   fabmo.manualExit();
+//   console.log("unloaded!");        
+// }, false);
+
+$(document).ready(function() {
+    fabmo.manualEnter({hideKeypad:true, mode:'raw'});
+    fabmo.requestStatus();
+// On unload, clear manual mode 
+    window.addEventListener("unload", function(e){
+      fabmo.manualExit();
+      console.log("unloaded!");        
+    }, false);
+})
+
 
 
