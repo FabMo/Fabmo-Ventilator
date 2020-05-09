@@ -20,22 +20,20 @@ const init = () => {
     // setJobs();
     // setNextJob();
 }
-
 const kill = () => {
           fabmo.manualRunGCode('\x04\n');
-//          fabmo.manualRunGCode('%');
+          // *seems to force FabMo out of 'Manual'
 }
-
 const run = () => {
   if(!running){
-          $('#run').removeClass('btn-success').addClass('btn-danger').html('Run2')
+          $('#run').removeClass('btn-success').addClass('btn-success').html('Run2')
 //          fabmo.runGCode('G01 X10 F60', function(){
           fabmo.manualRunGCode('G01 X1 F60');
           running = true;
 //      });
   } else {
-          $('#run').removeClass('btn-danger').addClass('btn-success').html('Run1')
-          fabmo.manualRunGCode('G01 X2 F60');
+          $('#run').removeClass('btn-success').addClass('btn-success').html('Run1')
+          fabmo.manualRunGCode('G01 X5 F60');
           fabmo.manualRunGCode('G01 X0 F60')
           
           //fabmo.manualRunGCode('!');
@@ -109,12 +107,14 @@ function setConfig(id, value) {
 
 // ===============================================
 
-
+ let fabmo_status = ""
 fabmo.on('status', function(status) {
     let posx = status.posx;
     let inp5 = status.in5;
     let inp6 = status.in6;
     let progress = "";
+    fabmo_status = status.state;
+
   // Compression Bar Display
         if (posx <= .5) {
             progress = "0%";
@@ -135,7 +135,13 @@ fabmo.on('status', function(status) {
             $('#mid-sig').hide();
         }
     updateFromConfig();
-});
+
+  //let's try simply forcing back to manual if we've been knocked out  
+    if (fabmo_status != "manual") { 
+      fabmo.manualEnter({hideKeypad:true, mode:'raw'});
+    };
+
+  });
 
 //fabmo.requestStatus();
 
@@ -158,7 +164,8 @@ $(document).ready(function() {
     fabmo.requestStatus();
 // On unload, clear manual mode 
     window.addEventListener("unload", function(e){
-      fabmo.manualExit();
+      if (fabmo_status === "manual") {fabmo.manualExit()};                // #??? making sure we aren't stuck ??
+      //fabmo.manualExit();                                                  // **DONT CALL IF NOT NEEDED !!!mx
       console.log("unloaded!");        
     }, false);
 })
